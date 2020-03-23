@@ -21,49 +21,52 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity {
-    private EditText email,password;
-    private Button log_btn,signup_btn;
-    String TAG="MainActivitypage";
+    private EditText email, password;
+    private Button log_btn, signup_btn;
+    String TAG = "MainActivitypage";
     private FirebaseAuth mAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        email=findViewById(R.id.textView1);
-        password=findViewById(R.id.textView2);
-        log_btn=findViewById(R.id.login);
-        signup_btn=findViewById(R.id.signup);
-        mAuth=FirebaseAuth.getInstance();
+        email = findViewById(R.id.textView1);
+        password = findViewById(R.id.textView2);
+        log_btn = findViewById(R.id.login);
+        signup_btn = findViewById(R.id.signup);
+        mAuth = FirebaseAuth.getInstance();
 
         log_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email_text=email.getText().toString();
-                String passwor_text=password.getText().toString();
-                signIn(email_text,passwor_text);
+                String email_text = email.getText().toString();
+                String passwor_text = password.getText().toString();
+                signIn(email_text, passwor_text);
             }
         });
         signup_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(MainActivity.this,SignUp.class);
+                Intent intent = new Intent(MainActivity.this, SignUp.class);
                 startActivity(intent);
             }
         });
     }
+
     @Override
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser!=null){
-            Intent intent=new Intent(MainActivity.this,HomePage.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|
+        if (currentUser != null) {
+            Intent intent = new Intent(MainActivity.this, HomePage.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
                     Intent.FLAG_ACTIVITY_CLEAR_TASK |
                     Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         }
     }
+
     private void signIn(String email, String password) {
 
         mAuth.signInWithEmailAndPassword(email, password)
@@ -74,8 +77,8 @@ public class MainActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            Intent intent=new Intent(MainActivity.this,HomePage.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|
+                            Intent intent = new Intent(MainActivity.this, HomePage.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
                                     Intent.FLAG_ACTIVITY_CLEAR_TASK |
                                     Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);

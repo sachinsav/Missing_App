@@ -18,32 +18,33 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class SignUp extends AppCompatActivity {
-EditText e1,e2,e3,e4,e5,e6;
-Button btn_signup;
-String TAG="signuppage";
-private FirebaseAuth mAuth;
+    EditText e1, e2, e3, e4, e5, e6;
+    Button btn_signup;
+    String TAG = "signuppage";
+    private FirebaseAuth mAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
-        e1=findViewById(R.id.editText);
-        e2=findViewById(R.id.editText2);
-        e3=findViewById(R.id.editText3);
-        e4=findViewById(R.id.editText4);
-        e5=findViewById(R.id.editText5);
-        e6=findViewById(R.id.editText6);
-        btn_signup=findViewById(R.id.b_signup);
+        e1 = findViewById(R.id.editText);
+        e2 = findViewById(R.id.editText2);
+        e3 = findViewById(R.id.editText3);
+        e4 = findViewById(R.id.editText4);
+        e5 = findViewById(R.id.editText5);
+        e6 = findViewById(R.id.editText6);
+        btn_signup = findViewById(R.id.b_signup);
         mAuth = FirebaseAuth.getInstance();
         btn_signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String name=e1.getText().toString();
-                String phone=e2.getText().toString();
-                String address=e3.getText().toString();
-                String email=e4.getText().toString();
-                String password=e5.getText().toString();
-                ProfileDetail detail=new ProfileDetail(name,phone,address,email);
-                createAccount(email,password,detail);
+                String name = e1.getText().toString();
+                String phone = e2.getText().toString();
+                String address = e3.getText().toString();
+                String email = e4.getText().toString();
+                String password = e5.getText().toString();
+                ProfileDetail detail = new ProfileDetail(name, phone, address, email);
+                createAccount(email, password, detail);
             }
         });
 
@@ -59,8 +60,8 @@ private FirebaseAuth mAuth;
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             FirebaseHelper.add_To_Profile(detail);
-                            Intent intent=new Intent(SignUp.this,MainActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|
+                            Intent intent = new Intent(SignUp.this, MainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
                                     Intent.FLAG_ACTIVITY_CLEAR_TASK |
                                     Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
