@@ -25,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:layout_marginTop="-30dp"
+            android:layout_marginTop="0dp"
             android:padding="8dp"
             android:orientation="vertical">
             <EditText
@@ -74,8 +74,8 @@
 
                 <ImageView
                     android:id="@+id/iv"
-                    android:layout_width="250dp"
-                    android:layout_height="250dp"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
                     android:layout_gravity="center"
                     android:src="@drawable/profile_pic" />
 
