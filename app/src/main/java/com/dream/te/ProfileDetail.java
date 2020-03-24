@@ -12,4 +12,20 @@ public class ProfileDetail {
         add=address;
         email=email1;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getMob() {
+        return mob;
+    }
+
+    public String getAdd() {
+        return add;
+    }
+
+    public String getEmail() {
+        return email;
+    }
 }

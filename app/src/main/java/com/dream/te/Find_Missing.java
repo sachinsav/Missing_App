@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -39,7 +40,7 @@ import java.util.List;
 
 public class Find_Missing extends AppCompatActivity {
     FirebaseAuth mAuth;
-    private Button btn,btnreport,find;
+    private Button btn,find;
     private ImageView imageview;
     private static final String IMAGE_DIRECTORY = "/demoTE";
     private int GALLERY = 1, CAMERA = 2;
@@ -47,7 +48,7 @@ public class Find_Missing extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find__missing);
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mAuth=FirebaseAuth.getInstance();
 
 
@@ -55,15 +56,7 @@ public class Find_Missing extends AppCompatActivity {
 
         btn = (Button) findViewById(R.id.btn1);
         imageview = (ImageView) findViewById(R.id.iv1);
-        btnreport = (Button) findViewById(R.id.btnreport);
         find= (Button) findViewById(R.id.find1);
-
-        btnreport.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(Find_Missing.this,Report_Missing.class));
-            }
-        });
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,11 +74,8 @@ public class Find_Missing extends AppCompatActivity {
     public boolean onOptionsItemSelected(final MenuItem item) {
 
         switch (item.getItemId()) {
-            case R.id.profile:
-                startActivity(new Intent(Find_Missing.this,Main2Activity.class));
-                return true;
-            case R.id.missing_page:
-                startActivity(new Intent(Find_Missing.this,Missing_Page.class));
+            case R.id.share:
+                Toast.makeText(this, "Thanks For Sharing Our App!!", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.logout:
                 logout();

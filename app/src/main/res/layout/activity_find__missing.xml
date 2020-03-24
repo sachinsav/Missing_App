@@ -7,38 +7,10 @@
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="4dp"
-                android:layout_marginTop="2dp"
-                android:layout_marginBottom="4dp"
-                android:background="#f00" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center_horizontal"
-                android:paddingRight="4dp"
-                android:paddingLeft="4dp"
-                android:orientation="vertical">
-
                 <TextView
                     android:id="@+id/title1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="30dp"
                     android:background="#abc"
                     android:gravity="center_horizontal"
                     android:paddingTop="10dp"
@@ -47,10 +19,16 @@
                     android:textColor="#F04544"
                     android:textSize="25sp"
                     android:textStyle="bold" />
-
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_gravity="center"
+                android:gravity="center">
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    >
 
                     <Button
                         android:id="@+id/btn1"
@@ -62,12 +40,12 @@
                         android:paddingRight="15dp"
                         android:text="Capture Image"
                         android:textColor="@color/colorAccent"
-                        android:textSize="14sp" />
+                        android:textSize="16sp" />
 
                     <ImageView
                         android:id="@+id/iv1"
-                        android:layout_width="200dp"
-                        android:layout_height="200dp"
+                        android:layout_width="300dp"
+                        android:layout_height="300dp"
                         android:layout_gravity="center"
                         android:src="@drawable/profile_pic" />
 
@@ -84,8 +62,7 @@
                     android:id="@+id/find1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginBottom="30dp"
+                    android:layout_marginTop="25dp"
                     android:background="@drawable/btn_drawable"
                     android:paddingLeft="30dp"
                     android:paddingRight="30dp"
@@ -93,51 +70,6 @@
                     android:textColor="@color/colorAccent"
                     android:textSize="20sp" />
             </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="4dp"
-                android:background="#f00" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/title2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginBottom="30dp"
-                    android:background="#abc"
-                    android:gravity="center_horizontal"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
-                    android:text="Report Complaint"
-                    android:textColor="#F04544"
-                    android:textSize="25sp"
-                    android:textStyle="bold" />
-
-                <Button
-                    android:id="@+id/btnreport"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginBottom="30dp"
-                    android:background="@drawable/btn_drawable"
-                    android:paddingLeft="30dp"
-                    android:paddingRight="30dp"
-                    android:text="Report Complaint"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="20sp" />
-            </LinearLayout>
-        </LinearLayout>
-    </ScrollView>
 </LinearLayout>
 
 

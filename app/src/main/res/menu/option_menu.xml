@@ -3,16 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <item android:id="@+id/profile"
-        android:title="Profile"
+    <item android:id="@+id/share"
+        android:title="Share"
+        android:icon="@drawable/ic_share_black_24dp"
+        app:showAsAction="always"
         />
-    <item android:id="@+id/report"
-        android:title="Report Complaint"
-
-        android:icon="@drawable/report"
-        app:showAsAction="always"/>
-    <item android:id="@+id/missing_page"
-        android:title="All Reports" />
     <item android:id="@+id/logout"
+        android:icon="@drawable/ic_power_settings_new_black_24dp"
+        app:showAsAction="ifRoom"
         android:title="Log Out" />
 </menu>
