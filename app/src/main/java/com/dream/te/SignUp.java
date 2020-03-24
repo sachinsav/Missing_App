@@ -60,6 +60,7 @@ public class SignUp extends AppCompatActivity {
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             FirebaseHelper.add_To_Profile(detail);
+                            FirebaseHelper.add_To_Count("0","0");
                             Intent intent = new Intent(SignUp.this, MainActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
                                     Intent.FLAG_ACTIVITY_CLEAR_TASK |

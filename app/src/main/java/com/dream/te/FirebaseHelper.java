@@ -36,7 +36,13 @@ public class FirebaseHelper {
         DatabaseReference myRef = database.getReference("UserProfile").child(uid);
         myRef.setValue(details);
     }
-
+    public static void add_To_Count(String c1,String c2) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference myRef = database.getReference("Count").child(uid);
+        myRef.child("report").setValue(c1);
+        myRef.child("found").setValue(c2);
+    }
     public StorageReference storage_ref() {
         return FirebaseStorage.getInstance().getReference().child("images/" + getuid());
     }

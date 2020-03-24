@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,19 +22,26 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Main2Activity extends AppCompatActivity {
     EditText t1,t2,t3,t4;
+    TextView rtv,ftv;
     Button edit;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+        getSupportActionBar().setTitle("Profile");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         t1=findViewById(R.id.ename);
         t2=findViewById(R.id.eemail);
         t3=findViewById(R.id.emob);
         t4=findViewById(R.id.eaddress);
         edit=findViewById(R.id.edit);
+        rtv=findViewById(R.id.id_noofreport);
+        ftv=findViewById(R.id.no_offound);
         edit.setEnabled(false);
         disableAll();
         String uid=FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -45,6 +53,23 @@ public class Main2Activity extends AppCompatActivity {
                 pd=dataSnapshot.getValue(ProfileDetail.class);
                 updateUi(pd);
                 edit.setEnabled(true);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        DatabaseReference dbref2 = FirebaseDatabase.getInstance().getReference("Count").child(uid);
+        dbref2.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Map<String,String> map=new HashMap<>();
+                for(DataSnapshot ds:dataSnapshot.getChildren()){
+                    map.put(ds.getKey(),ds.getValue().toString());
+                }
+                ftv.setText(map.get("found"));
+                rtv.setText(map.get("report"));
             }
 
             @Override

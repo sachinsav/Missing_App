@@ -22,6 +22,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Missing_Page extends AppCompatActivity {
     private RecyclerView mRecyclerView;
@@ -36,10 +37,10 @@ public class Missing_Page extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_missing__page);
         mRecyclerView = findViewById(R.id.recycler_view);
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Missing Persons");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
         mProgressCircle = findViewById(R.id.progress_circle);
 
         mUploads = new ArrayList<>();

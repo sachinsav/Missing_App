@@ -1,6 +1,7 @@
 package com.dream.te;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,11 +31,13 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
         return new ImageViewHolder(v);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(ImageViewHolder holder, int position) {
         Report_Obj uploadCurrent = mUploads.get(position);
-        holder.textViewName.setText(uploadCurrent.getName());
-        holder.textViewMob.setText(uploadCurrent.getMob_no());
+        String formated_name=uploadCurrent.getName().substring(0,1).toUpperCase()+uploadCurrent.getName().substring(1);
+        holder.textViewName.setText(formated_name);
+        holder.textViewMob.setText("M: "+uploadCurrent.getMob_no());
         Picasso.with(mContext)
                 .load(uploadCurrent.getImage_url())
                 .placeholder(R.drawable.loading)

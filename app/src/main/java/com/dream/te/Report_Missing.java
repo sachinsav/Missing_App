@@ -30,7 +30,11 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.karumi.dexter.Dexter;
@@ -46,7 +50,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class Report_Missing extends AppCompatActivity {
     FirebaseAuth mAuth;
@@ -67,13 +74,13 @@ public class Report_Missing extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         requestMultiplePermissions();
         fh = FirebaseHelper.getInstance();
-        btn = (Button) findViewById(R.id.btn);
-        imageview = (ImageView) findViewById(R.id.iv);
-        ename = (EditText) findViewById(R.id.name);
-        emob = (EditText) findViewById(R.id.mob_no);
-        eadd = (EditText) findViewById(R.id.address);
-        breg = (Button) findViewById(R.id.reg);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        btn = findViewById(R.id.btn);
+        imageview = findViewById(R.id.iv);
+        ename = findViewById(R.id.name);
+        emob = findViewById(R.id.mob_no);
+        eadd = findViewById(R.id.address);
+        breg = findViewById(R.id.reg);
+        progressBar = findViewById(R.id.progressBar);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -165,8 +172,6 @@ public class Report_Missing extends AppCompatActivity {
                 try {
 
                         Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
-                      //  String path = saveImage(bitmap);
-                       // Toast.makeText(Report_Missing.this, "Image Saved!", Toast.LENGTH_SHORT).show();
                         imageview.setImageBitmap(bitmap);
 
 
@@ -180,10 +185,8 @@ public class Report_Missing extends AppCompatActivity {
              img_uri=data.getData();
             Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
             imageview.setImageBitmap(thumbnail);
-           // saveImage(thumbnail);
             if(img_uri==null)
                 img_uri = getImageUri(this, thumbnail);
-            //Toast.makeText(Report_Missing.this, "Image Saved!", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -308,6 +311,10 @@ public class Report_Missing extends AppCompatActivity {
                                 Report_Obj report_obj = new Report_Obj(nname, nmob, naddress, downloadUrl.toString());
                                 FirebaseDatabase.getInstance().getReference("Reports").child(fh.getuid()).setValue(report_obj);
                                 Snackbar snackbar=Snackbar.make(breg,"Report Registered Successfully!!",Snackbar.LENGTH_LONG);
+                                //TODO look here
+//                                increse_report_count();
+//                                String new_r_count=(Integer.parseInt(Objects.requireNonNull(map.get("report")))+1)+"";
+//                                FirebaseHelper.add_To_Count(new_r_count,map.get("found").toString());
                                 snackbar.show();
                                 // TODO: Call to API here
 
@@ -332,5 +339,23 @@ public class Report_Missing extends AppCompatActivity {
         } catch (Exception e) {
             Log.d("uploadfile", "atend" + e.toString());
         }
+    }
+    Map<String,String> map=new HashMap<>();
+    private void increse_report_count() {
+        DatabaseReference dbref2 = FirebaseDatabase.getInstance().getReference("Count").child(fh.getuid());
+        dbref2.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for(DataSnapshot ds:dataSnapshot.getChildren()){
+                    map.put(ds.getKey(),ds.getValue().toString());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 }

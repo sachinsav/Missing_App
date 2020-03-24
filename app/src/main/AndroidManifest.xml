@@ -22,7 +22,8 @@
         <activity android:name=".Missing_Page"
             android:parentActivityName=".HomePage"/>
         <activity android:name=".Main2Activity"
-            android:parentActivityName=".HomePage"/>
+            android:parentActivityName=".HomePage"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
             android:name=".Report_Missing"
             android:windowSoftInputMode="stateAlwaysHidden"

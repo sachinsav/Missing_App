@@ -5,27 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Missing_Page"
-    android:background="#ccc"
+
     >
     <ProgressBar
         android:id="@+id/progress_circle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true" />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:id="@+id/title"
-        android:text="Missing Persons"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:background="#abc"
-        android:textSize="25sp"
-        android:textStyle="bold"
-        android:textColor="#F04544"
-        android:gravity="center_horizontal"
-        />
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
