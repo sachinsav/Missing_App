@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.StorageReference;
@@ -134,8 +135,8 @@ public class Report_Missing extends AppCompatActivity {
                 try {
 
                         Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
-                        String path = saveImage(bitmap);
-                        Toast.makeText(Report_Missing.this, "Image Saved!", Toast.LENGTH_SHORT).show();
+                      //  String path = saveImage(bitmap);
+                       // Toast.makeText(Report_Missing.this, "Image Saved!", Toast.LENGTH_SHORT).show();
                         imageview.setImageBitmap(bitmap);
 
 
@@ -149,27 +150,13 @@ public class Report_Missing extends AppCompatActivity {
              img_uri=data.getData();
             Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
             imageview.setImageBitmap(thumbnail);
-            saveImage(thumbnail);
+           // saveImage(thumbnail);
             if(img_uri==null)
                 img_uri = getImageUri(this, thumbnail);
-            Toast.makeText(Report_Missing.this, "Image Saved!", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(Report_Missing.this, "Image Saved!", Toast.LENGTH_SHORT).show();
         }
     }
 
-    public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
-        int width = image.getWidth();
-        int height = image.getHeight();
-
-        float bitmapRatio = (float) width / (float) height;
-        if (bitmapRatio > 1) {
-            width = maxSize;
-            height = (int) (width / bitmapRatio);
-        } else {
-            height = maxSize;
-            width = (int) (height * bitmapRatio);
-        }
-        return Bitmap.createScaledBitmap(image, width, height, true);
-    }
 
     public Uri getImageUri(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -178,34 +165,34 @@ public class Report_Missing extends AppCompatActivity {
         return Uri.parse(path);
     }
 
-    public String saveImage(Bitmap myBitmap) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-        File wallpaperDirectory = new File(
-                Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
-        // have the object build the directory structure, if needed.
-        if (!wallpaperDirectory.exists()) {
-            wallpaperDirectory.mkdirs();
-        }
-
-        try {
-            File f = new File(wallpaperDirectory, Calendar.getInstance()
-                    .getTimeInMillis() + ".jpg");
-            f.createNewFile();
-            FileOutputStream fo = new FileOutputStream(f);
-            fo.write(bytes.toByteArray());
-            MediaScannerConnection.scanFile(this,
-                    new String[]{f.getPath()},
-                    new String[]{"image/jpeg"}, null);
-            fo.close();
-            Log.d("TAG", "File Saved::---&gt;" + f.getAbsolutePath());
-
-            return f.getAbsolutePath();
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-        return "";
-    }
+//    public String saveImage(Bitmap myBitmap) {
+//        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+//        myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+//        File wallpaperDirectory = new File(
+//                Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
+//        // have the object build the directory structure, if needed.
+//        if (!wallpaperDirectory.exists()) {
+//            wallpaperDirectory.mkdirs();
+//        }
+//
+//        try {
+//            File f = new File(wallpaperDirectory, Calendar.getInstance()
+//                    .getTimeInMillis() + ".jpg");
+//            f.createNewFile();
+//            FileOutputStream fo = new FileOutputStream(f);
+//            fo.write(bytes.toByteArray());
+//            MediaScannerConnection.scanFile(this,
+//                    new String[]{f.getPath()},
+//                    new String[]{"image/jpeg"}, null);
+//            fo.close();
+//            Log.d("TAG", "File Saved::---&gt;" + f.getAbsolutePath());
+//
+//            return f.getAbsolutePath();
+//        } catch (IOException e1) {
+//            e1.printStackTrace();
+//        }
+//        return "";
+//    }
 
     private void requestMultiplePermissions() {
         Dexter.withActivity(this)
@@ -261,7 +248,12 @@ public class Report_Missing extends AppCompatActivity {
         breg.setEnabled(true);
         // imageview.setAlpha(1f);
     }
-
+    private void clearAll(){
+        eadd.getText().clear();
+        ename.getText().clear();
+        emob.getText().clear();
+        imageview.setImageResource(R.drawable.profile_pic);
+    }
     private void register_report() {
         final String nname = ename.getText().toString();
         final String nmob = emob.getText().toString();
@@ -285,11 +277,13 @@ public class Report_Missing extends AppCompatActivity {
                                 // String dbref = FirebaseDatabase.getInstance().getReference("images").push().getKey();
                                 Report_Obj report_obj = new Report_Obj(nname, nmob, naddress, downloadUrl.toString());
                                 FirebaseDatabase.getInstance().getReference("Reports").child(fh.getuid()).setValue(report_obj);
-                                Toast.makeText(Report_Missing.this, "Report Registered!!", Toast.LENGTH_SHORT).show();
+                                Snackbar snackbar=Snackbar.make(breg,"Report Registered Successfully!!",Snackbar.LENGTH_LONG);
+                                snackbar.show();
                                 // TODO: Call to API here
 
                                 progressBar.setVisibility(View.INVISIBLE);
                                 enableAll();
+                                clearAll();
 
                             }
                         })

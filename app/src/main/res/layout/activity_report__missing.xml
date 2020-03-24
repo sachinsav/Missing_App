@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:padding="8dp"
     tools:context=".Report_Missing">
 
     <ScrollView
@@ -18,28 +17,60 @@
             android:layout_height="match_parent"
             android:gravity="center_horizontal"
             android:orientation="vertical">
-
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="2dp"
+                android:background="#f00" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/title"
+                android:text="Report Missing Person"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:background="#abc"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:textColor="#F04544"
+                android:gravity="center_horizontal"
+                />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="8dp"
+            android:orientation="vertical">
             <EditText
                 android:id="@+id/name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:hint="Enter Your Name" />
+                android:hint="Enter Your Name"
+                android:maxLength="25"
+                android:inputType="textImeMultiLine"/>
 
             <EditText
                 android:id="@+id/mob_no"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:hint="Enter Your Name" />
+                android:layout_marginTop="10dp"
+                android:hint="Enter Mobile Number"
+                android:maxLength="10"
+                android:inputType="textImeMultiLine|phone"/>
 
             <EditText
                 android:id="@+id/address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="10dp"
-                android:hint="Enter Your Name" />
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
+                android:hint="Enter Address"
+                android:maxLength="120"
+                android:inputType="textImeMultiLine" />
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -50,15 +81,20 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:text="Select Image"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
+                    android:background="@drawable/btn_drawable_image"
+                    android:text="Select Photo"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="14sp"
+                     />
 
                 <ImageView
                     android:id="@+id/iv"
                     android:layout_width="200dp"
                     android:layout_height="200dp"
                     android:layout_gravity="center"
-                    android:src="@mipmap/ic_launcher" />
+                    android:src="@drawable/profile_pic" />
 
                 <ProgressBar
                     android:id="@+id/progressBar"
@@ -72,9 +108,15 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/btn_drawable"
+                android:textColor="@color/colorAccent"
+                android:paddingRight="30dp"
+                android:paddingLeft="30dp"
                 android:id="@+id/reg"
+                android:textSize="20sp"
                 android:text="Report" />
+        </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

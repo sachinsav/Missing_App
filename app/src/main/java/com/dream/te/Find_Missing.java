@@ -2,17 +2,26 @@ package com.dream.te;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.Manifest;
-import android.os.Bundle;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -21,35 +30,15 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.PermissionRequestErrorListener;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.MediaScannerConnection;
-import android.net.Uri;
-import android.os.Environment;
-import android.provider.MediaStore;
-
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.Toast;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
-
 import java.util.List;
-import com.google.firebase.auth.FirebaseAuth;
 
-public class HomePage extends AppCompatActivity {
-
-FirebaseAuth mAuth;
+public class Find_Missing extends AppCompatActivity {
+    FirebaseAuth mAuth;
     private Button btn,btnreport,find;
     private ImageView imageview;
     private static final String IMAGE_DIRECTORY = "/demoTE";
@@ -57,7 +46,7 @@ FirebaseAuth mAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home_page);
+        setContentView(R.layout.activity_find__missing);
 
         mAuth=FirebaseAuth.getInstance();
 
@@ -72,7 +61,7 @@ FirebaseAuth mAuth;
         btnreport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(HomePage.this,Report_Missing.class));
+                startActivity(new Intent(Find_Missing.this,Report_Missing.class));
             }
         });
         btn.setOnClickListener(new View.OnClickListener() {
@@ -93,10 +82,10 @@ FirebaseAuth mAuth;
 
         switch (item.getItemId()) {
             case R.id.profile:
-                startActivity(new Intent(HomePage.this,Main2Activity.class));
+                startActivity(new Intent(Find_Missing.this,Main2Activity.class));
                 return true;
             case R.id.missing_page:
-                startActivity(new Intent(HomePage.this,Missing_Page.class));
+                startActivity(new Intent(Find_Missing.this,Missing_Page.class));
                 return true;
             case R.id.logout:
                 logout();
@@ -152,21 +141,19 @@ FirebaseAuth mAuth;
                 Uri contentURI = data.getData();
                 try {
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
-                    String path = saveImage(bitmap);
-                    Toast.makeText(HomePage.this, "Image Saved!", Toast.LENGTH_SHORT).show();
+                   // String path = saveImage(bitmap);
                     imageview.setImageBitmap(bitmap);
 
                 } catch (IOException e) {
                     e.printStackTrace();
-                    Toast.makeText(HomePage.this, "Failed!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Find_Missing.this, "Failed!", Toast.LENGTH_SHORT).show();
                 }
             }
 
         } else if (requestCode == CAMERA) {
             Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
             imageview.setImageBitmap(thumbnail);
-            saveImage(thumbnail);
-            Toast.makeText(HomePage.this, "Image Saved!", Toast.LENGTH_SHORT).show();
+
         }
     }
 
@@ -235,13 +222,13 @@ FirebaseAuth mAuth;
                 .onSameThread()
                 .check();
     }
-     public void logout(){
-            mAuth.signOut();
-            Intent intent=new Intent(HomePage.this,MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|
-                    Intent.FLAG_ACTIVITY_CLEAR_TASK |
-                    Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-        }
+    public void logout(){
+        mAuth.signOut();
+        Intent intent=new Intent(Find_Missing.this,MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|
+                Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
 
 }

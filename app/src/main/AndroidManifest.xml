@@ -16,9 +16,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".Missing_Page"></activity>
+        <activity android:name=".Find_Missing"></activity>
+        <activity android:name=".Missing_Page" />
         <activity android:name=".Main2Activity" />
-        <activity android:name=".Report_Missing" />
+        <activity
+            android:name=".Report_Missing"
+            android:windowSoftInputMode="stateAlwaysHidden"></activity>
         <activity android:name=".HomePage" />
         <activity android:name=".SignUp" />
         <activity android:name=".MainActivity">

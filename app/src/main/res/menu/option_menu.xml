@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <item android:id="@+id/profile"
-        android:title="Profile" />
+        android:title="Profile"
+        />
+    <item android:id="@+id/report"
+        android:title="Report Complaint"
+
+        android:icon="@drawable/report"
+        app:showAsAction="always"/>
+    <item android:id="@+id/missing_page"
+        android:title="All Reports" />
     <item android:id="@+id/logout"
-        android:title="Log_Out" />
+        android:title="Log Out" />
 </menu>
