@@ -71,6 +71,7 @@ public class Report_Missing extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report__missing);
         mAuth = FirebaseAuth.getInstance();
+        getSupportActionBar().setTitle("Report");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         requestMultiplePermissions();
         fh = FirebaseHelper.getInstance();

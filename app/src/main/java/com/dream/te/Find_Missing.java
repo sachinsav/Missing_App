@@ -48,6 +48,7 @@ public class Find_Missing extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find__missing);
+        getSupportActionBar().setTitle("Find Missing People");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mAuth=FirebaseAuth.getInstance();
 

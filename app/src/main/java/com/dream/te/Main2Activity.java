@@ -114,7 +114,7 @@ public class Main2Activity extends AppCompatActivity {
     }
     private void updateUi(ProfileDetail pd) {
 
-        t1.setText(pd.getName());
+        t1.setText(pd.getName().toUpperCase());
         t2.setText(pd.getEmail());
         t3.setText(pd.getMob());
         t4.setText(pd.getAdd());

@@ -6,70 +6,70 @@
     android:layout_gravity="center"
     android:gravity="center_horizontal"
     android:orientation="vertical">
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/title1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="#abc"
-                    android:gravity="center_horizontal"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
-                    android:text="Find Missing Person"
-                    android:textColor="#F04544"
-                    android:textSize="25sp"
-                    android:textStyle="bold" />
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/iv1"
+                android:layout_width="250dp"
+                android:layout_height="250dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/th"
+                app:civ_border_color="#E91E63"
+                app:civ_border_width="4dp" />
+
+            <ProgressBar
+                android:id="@+id/progressBar1"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:layout_gravity="center"
-                android:gravity="center">
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    >
+                android:visibility="invisible" />
+        </FrameLayout>
 
-                    <Button
-                        android:id="@+id/btn1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:background="@drawable/btn_drawable_image"
-                        android:paddingLeft="15dp"
-                        android:paddingRight="15dp"
-                        android:text="Capture Image"
-                        android:textColor="@color/colorAccent"
-                        android:textSize="16sp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="40dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
 
-                    <ImageView
-                        android:id="@+id/iv1"
-                        android:layout_width="300dp"
-                        android:layout_height="300dp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/profile_pic" />
+            <Button
+                android:id="@+id/btn1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/btn_drawable"
+                android:text="Capture Image"
+                android:layout_marginBottom="25dp"
+                android:textColor="@color/colorAccent"
+                android:textSize="20sp" />
 
-                    <ProgressBar
-                        android:id="@+id/progressBar1"
-                        style="?android:attr/progressBarStyle"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:layout_gravity="center"
-                        android:visibility="invisible" />
-                </FrameLayout>
-
-                <Button
-                    android:id="@+id/find1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="25dp"
-                    android:background="@drawable/btn_drawable"
-                    android:paddingLeft="30dp"
-                    android:paddingRight="30dp"
-                    android:text="Find"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="20sp" />
-            </LinearLayout>
+            <Button
+                android:id="@+id/find1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_drawable"
+                android:layout_marginBottom="15dp"
+                android:text="Find"
+                android:textColor="@color/colorAccent"
+                android:textSize="20sp" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>
 </LinearLayout>
 
 
