@@ -7,17 +7,26 @@
     tools:context=".Missing_Page"
 
     >
-    <ProgressBar
+<!--    <ProgressBar-->
+<!--        android:id="@+id/progress_circle"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_centerInParent="true" />-->
+    <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/progress_circle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true" />
-
+        android:scaleType="centerCrop"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:visibility="visible"
+        app:lottie_rawRes="@raw/wave"
+        app:lottie_loop="true"
+        app:lottie_autoPlay="true" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/title"
         />
 </RelativeLayout>

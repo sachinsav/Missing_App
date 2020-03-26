@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.karumi.dexter.Dexter;
@@ -42,6 +43,7 @@ public class Find_Missing extends AppCompatActivity {
     FirebaseAuth mAuth;
     private Button btn,find;
     private ImageView imageview;
+    private LottieAnimationView pganim;
     private static final String IMAGE_DIRECTORY = "/demoTE";
     private int GALLERY = 1, CAMERA = 2;
     @Override
@@ -52,9 +54,8 @@ public class Find_Missing extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mAuth=FirebaseAuth.getInstance();
 
-
         requestMultiplePermissions();
-
+        pganim=findViewById(R.id.progressBaranim1);
         btn = (Button) findViewById(R.id.btn1);
         imageview = (ImageView) findViewById(R.id.iv1);
         find= (Button) findViewById(R.id.find1);
@@ -64,6 +65,30 @@ public class Find_Missing extends AppCompatActivity {
                 showPictureDialog();
             }
         });
+        find.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                disableAll();
+            }
+        });
+
+
+    }
+    public void disableAll(){
+        pganim.setVisibility(View.VISIBLE);
+        imageview.setAlpha(0.8f);
+        find.setEnabled(false);
+        btn.setEnabled(false);
+        find.setAlpha(0.6f);
+        btn.setAlpha(0.6f);
+    }
+    public void enableAll(){
+        imageview.setAlpha(1f);
+        find.setEnabled(true);
+        btn.setEnabled(true);
+        pganim.setVisibility(View.INVISIBLE);
+        find.setAlpha(1f);
+        btn.setAlpha(1f);
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -188,7 +213,7 @@ public class Find_Missing extends AppCompatActivity {
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
                         // check if all permissions are granted
                         if (report.areAllPermissionsGranted()) {
-                            Toast.makeText(getApplicationContext(), "All permissions are granted by user!", Toast.LENGTH_SHORT).show();
+                            Log.d("permission", "All permissions are granted by user!");
                         }
 
                         // check for permanent denial of any permission

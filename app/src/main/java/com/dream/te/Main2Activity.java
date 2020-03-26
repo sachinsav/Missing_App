@@ -12,9 +12,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -28,6 +30,8 @@ import java.util.Map;
 public class Main2Activity extends AppCompatActivity {
     EditText t1,t2,t3,t4;
     TextView rtv,ftv;
+    LinearLayout ready;
+    LottieAnimationView progressbar,userimg;
     Button edit;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +39,10 @@ public class Main2Activity extends AppCompatActivity {
         setContentView(R.layout.activity_main2);
         getSupportActionBar().setTitle("Profile");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        progressbar =findViewById(R.id.animation_view);
+        userimg= findViewById(R.id.animation_view2);
+        ready = findViewById(R.id.ready);
+        ready.setVisibility(View.INVISIBLE);
         t1=findViewById(R.id.ename);
         t2=findViewById(R.id.eemail);
         t3=findViewById(R.id.emob);
@@ -53,6 +61,8 @@ public class Main2Activity extends AppCompatActivity {
                 pd=dataSnapshot.getValue(ProfileDetail.class);
                 updateUi(pd);
                 edit.setEnabled(true);
+                ready.setVisibility(View.VISIBLE);
+                progressbar.setVisibility(View.INVISIBLE);
             }
 
             @Override
@@ -148,5 +158,9 @@ public class Main2Activity extends AppCompatActivity {
                 Intent.FLAG_ACTIVITY_CLEAR_TASK |
                 Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+    }
+
+    public void userclicked(View view) {
+        userimg.playAnimation();
     }
 }

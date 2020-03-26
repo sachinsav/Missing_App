@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -63,7 +64,7 @@ public class Report_Missing extends AppCompatActivity {
     private static final String IMAGE_DIRECTORY = "/demoTE";
     private int GALLERY = 1, CAMERA = 2;
     private Uri img_uri;
-    private ProgressBar progressBar;
+    private LottieAnimationView progressBar;
     FirebaseHelper fh;
 
     @Override
@@ -199,34 +200,6 @@ public class Report_Missing extends AppCompatActivity {
         return Uri.parse(path);
     }
 
-//    public String saveImage(Bitmap myBitmap) {
-//        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-//        myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-//        File wallpaperDirectory = new File(
-//                Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
-//        // have the object build the directory structure, if needed.
-//        if (!wallpaperDirectory.exists()) {
-//            wallpaperDirectory.mkdirs();
-//        }
-//
-//        try {
-//            File f = new File(wallpaperDirectory, Calendar.getInstance()
-//                    .getTimeInMillis() + ".jpg");
-//            f.createNewFile();
-//            FileOutputStream fo = new FileOutputStream(f);
-//            fo.write(bytes.toByteArray());
-//            MediaScannerConnection.scanFile(this,
-//                    new String[]{f.getPath()},
-//                    new String[]{"image/jpeg"}, null);
-//            fo.close();
-//            Log.d("TAG", "File Saved::---&gt;" + f.getAbsolutePath());
-//
-//            return f.getAbsolutePath();
-//        } catch (IOException e1) {
-//            e1.printStackTrace();
-//        }
-//        return "";
-//    }
 
     private void requestMultiplePermissions() {
         Dexter.withActivity(this)
@@ -239,7 +212,7 @@ public class Report_Missing extends AppCompatActivity {
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
                         // check if all permissions are granted
                         if (report.areAllPermissionsGranted()) {
-                            Toast.makeText(getApplicationContext(), "All permissions are granted by user!", Toast.LENGTH_SHORT).show();
+                           Log.d("permisiion","all permisiion is granted");
                         }
 
                         // check for permanent denial of any permission
@@ -271,7 +244,9 @@ public class Report_Missing extends AppCompatActivity {
         emob.setEnabled(false);
         btn.setEnabled(false);
         breg.setEnabled(false);
-        //imageview.setAlpha(0.7f);
+        btn.setAlpha(0.5f);
+        breg.setAlpha(0.5f);
+        imageview.setAlpha(0.5f);
     }
 
     private void enableAll() {
@@ -280,18 +255,25 @@ public class Report_Missing extends AppCompatActivity {
         emob.setEnabled(true);
         btn.setEnabled(true);
         breg.setEnabled(true);
-        // imageview.setAlpha(1f);
+        btn.setAlpha(1f);
+        breg.setAlpha(1f);
+         imageview.setAlpha(1f);
     }
     private void clearAll(){
         eadd.getText().clear();
         ename.getText().clear();
         emob.getText().clear();
-        imageview.setImageResource(R.drawable.profile_pic);
+        imageview.setImageResource(R.drawable.th);
+        img_uri=null;
     }
     private void register_report() {
         final String nname = ename.getText().toString();
         final String nmob = emob.getText().toString();
         final String naddress = eadd.getText().toString();
+        if(!validate(nname,nmob,naddress,img_uri)){
+            return;
+        }
+
         try {
             Log.d("uploadfile", "just start");
             if (img_uri != null) {
@@ -312,10 +294,8 @@ public class Report_Missing extends AppCompatActivity {
                                 Report_Obj report_obj = new Report_Obj(nname, nmob, naddress, downloadUrl.toString());
                                 FirebaseDatabase.getInstance().getReference("Reports").child(fh.getuid()).setValue(report_obj);
                                 Snackbar snackbar=Snackbar.make(breg,"Report Registered Successfully!!",Snackbar.LENGTH_LONG);
-                                //TODO look here
-//                                increse_report_count();
-//                                String new_r_count=(Integer.parseInt(Objects.requireNonNull(map.get("report")))+1)+"";
-//                                FirebaseHelper.add_To_Count(new_r_count,map.get("found").toString());
+                                increse_report_count();
+
                                 snackbar.show();
                                 // TODO: Call to API here
 
@@ -341,16 +321,46 @@ public class Report_Missing extends AppCompatActivity {
             Log.d("uploadfile", "atend" + e.toString());
         }
     }
+
+    private boolean validate(String nname, String nmob, String naddress, Uri img_uri) {
+        boolean validate=true;
+        if(nname.isEmpty()||nname.length()<3){
+            ename.setError("name must contain atleast 3 character");
+            validate=false;
+        }else{
+            ename.setError(null);
+        }
+        if(nmob.isEmpty()||nmob.length()!=10){
+            emob.setError("mobile must contain 10 degit");
+            validate=false;
+        }else{
+            emob.setError(null);
+        }
+        if(naddress.isEmpty()||naddress.length()<6||naddress.length()>100){
+            eadd.setError("address must contain character between 6 to 100");
+            validate=false;
+        }else{
+            eadd.setError(null);
+        }
+        if(img_uri==null){
+            validate=false;
+        }
+        return validate;
+    }
+
     Map<String,String> map=new HashMap<>();
     private void increse_report_count() {
         DatabaseReference dbref2 = FirebaseDatabase.getInstance().getReference("Count").child(fh.getuid());
-        dbref2.addValueEventListener(new ValueEventListener() {
+        dbref2.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
                 for(DataSnapshot ds:dataSnapshot.getChildren()){
+                    Log.d("firebase data",ds.getKey()+" "+ds.getValue());
                     map.put(ds.getKey(),ds.getValue().toString());
                 }
+                Log.d("single value even","again run");
+                String new_r_count=(Integer.parseInt(map.get("report").toString())+1)+"";
+                FirebaseHelper.add_To_Count(new_r_count,map.get("found").toString());
             }
 
             @Override
@@ -358,5 +368,6 @@ public class Report_Missing extends AppCompatActivity {
 
             }
         });
+
     }
 }

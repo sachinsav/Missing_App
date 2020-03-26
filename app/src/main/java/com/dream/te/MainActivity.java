@@ -3,6 +3,7 @@ package com.dream.te;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,7 +23,9 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity {
     private EditText email, password;
-    private Button log_btn, signup_btn;
+    private Button log_btn;
+    TextView signup_btn;
+    ProgressDialog progressDialog;
     String TAG = "MainActivitypage";
     private FirebaseAuth mAuth;
 
@@ -48,7 +51,14 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String email_text = email.getText().toString();
                 String passwor_text = password.getText().toString();
-                signIn(email_text, passwor_text);
+                if(validate(email_text,passwor_text)) {
+                    progressDialog = new ProgressDialog(MainActivity.this);
+                    progressDialog.setIndeterminate(true);
+                    progressDialog.setCancelable(false);
+                    progressDialog.setMessage("Authenticating...");
+                    progressDialog.show();
+                    signIn(email_text, passwor_text);
+                }
             }
         });
         signup_btn.setOnClickListener(new View.OnClickListener() {
@@ -67,6 +77,24 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public boolean validate(String emailstr,String passwordstr) {
+        boolean valid = true;
+        if (emailstr.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(emailstr).matches()) {
+            email.setError("enter a valid email address");
+            valid = false;
+        } else {
+            email.setError(null);
+        }
+
+        if (passwordstr.isEmpty() || passwordstr.length() < 6 || passwordstr.length() > 20) {
+            password.setError("between 6 and 20 alphanumeric characters");
+            valid = false;
+        } else {
+            password.setError(null);
+        }
+
+        return valid;
+    }
     private void signIn(String email, String password) {
 
         mAuth.signInWithEmailAndPassword(email, password)
@@ -77,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            progressDialog.dismiss();
                             Intent intent = new Intent(MainActivity.this, HomePage.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
                                     Intent.FLAG_ACTIVITY_CLEAR_TASK |
@@ -85,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
+                            progressDialog.dismiss();
                             Toast.makeText(MainActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
 

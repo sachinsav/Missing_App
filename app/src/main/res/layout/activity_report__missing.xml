@@ -15,38 +15,57 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:gravity="center"
         android:orientation="vertical"
         android:padding="8dp">
-
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            >
+<com.google.android.material.textfield.TextInputLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
         <EditText
             android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Enter Your Name"
-            android:inputType="textImeMultiLine"
+            android:inputType="textPersonName"
             android:maxLength="25" />
-
+</com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            >
         <EditText
             android:id="@+id/mob_no"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:hint="Enter Mobile Number"
-            android:inputType="textImeMultiLine|phone"
+            android:inputType="phone"
             android:maxLength="10" />
-
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
         <EditText
             android:id="@+id/address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:layout_marginBottom="20dp"
             android:hint="Enter Address"
-            android:inputType="textImeMultiLine"
+            android:inputType="textPostalAddress"
             android:maxLength="120" />
-
+        </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -62,19 +81,25 @@
                 app:civ_border_color="#E91E63"
                 app:civ_border_width="4dp" />
 
-            <ProgressBar
+            <com.airbnb.lottie.LottieAnimationView
                 android:id="@+id/progressBar"
-                style="?android:attr/progressBarStyle"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop"
+                app:lottie_rawRes="@raw/wave"
                 android:layout_gravity="center"
-                android:visibility="invisible" />
+                android:visibility="invisible"
+                app:lottie_loop="true"
+                app:lottie_autoPlay="true" />
         </FrameLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_margin="40dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginBottom="40dp"
+            android:layout_marginEnd="40dp"
             android:gravity="center_horizontal"
             android:orientation="vertical">
         <Button
