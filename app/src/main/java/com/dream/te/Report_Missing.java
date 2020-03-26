@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -56,6 +57,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class Report_Missing extends AppCompatActivity {
     FirebaseAuth mAuth;
     private Button btn, breg;
@@ -66,6 +71,7 @@ public class Report_Missing extends AppCompatActivity {
     private Uri img_uri;
     private LottieAnimationView progressBar;
     FirebaseHelper fh;
+    private Bitmap bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -173,7 +179,7 @@ public class Report_Missing extends AppCompatActivity {
                 img_uri = contentURI;
                 try {
 
-                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
+                        bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
                         imageview.setImageBitmap(bitmap);
 
 
@@ -185,10 +191,10 @@ public class Report_Missing extends AppCompatActivity {
 
         } else if (requestCode == CAMERA) {
              img_uri=data.getData();
-            Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
-            imageview.setImageBitmap(thumbnail);
+            bitmap = (Bitmap) data.getExtras().get("data");
+            imageview.setImageBitmap(bitmap);
             if(img_uri==null)
-                img_uri = getImageUri(this, thumbnail);
+                img_uri = getImageUri(this, bitmap);
         }
     }
 
@@ -293,12 +299,8 @@ public class Report_Missing extends AppCompatActivity {
                                 // String dbref = FirebaseDatabase.getInstance().getReference("images").push().getKey();
                                 Report_Obj report_obj = new Report_Obj(nname, nmob, naddress, downloadUrl.toString());
                                 FirebaseDatabase.getInstance().getReference("Reports").child(fh.getuid()).setValue(report_obj);
-                                Snackbar snackbar=Snackbar.make(breg,"Report Registered Successfully!!",Snackbar.LENGTH_LONG);
-                                increse_report_count();
-
-                                snackbar.show();
-                                // TODO: Call to API here
-
+                                //call to api
+                                uploadImage();
                                 progressBar.setVisibility(View.INVISIBLE);
                                 enableAll();
                                 clearAll();
@@ -369,5 +371,40 @@ public class Report_Missing extends AppCompatActivity {
             }
         });
 
+    }
+    private void uploadImage(){
+        String image=imageToString();
+        String title=FirebaseAuth.getInstance().getCurrentUser().getUid();
+        ApiInterface apiInterface=ApiClient.getAppClient().create(ApiInterface.class);
+        Call<ImageClass> call=apiInterface.uploadImage(title,image);
+        call.enqueue(new Callback<ImageClass>() {
+            @Override
+            public void onResponse(Call<ImageClass> call, Response<ImageClass> response) {
+                if(response.isSuccessful()){
+                    //success achived
+                    Snackbar snackbar=Snackbar.make(breg,"Report Registered Successfully!!",Snackbar.LENGTH_LONG);
+                    increse_report_count();
+                    snackbar.show();
+                }else{
+                    Snackbar snackbar=Snackbar.make(breg,"Somethin went wrong try again later!!",Snackbar.LENGTH_LONG);
+                    increse_report_count();
+                    snackbar.show();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ImageClass> call, Throwable t) {
+                Toast.makeText(Report_Missing.this, "error: "+t.toString(), Toast.LENGTH_SHORT).show();
+                Log.d("apimsg error: ",t.toString()+" msg: "+t.getMessage());
+                enableAll();
+            }
+        });
+    }
+    public String imageToString(){
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 70, bytes);
+        byte ar[]=bytes.toByteArray();
+        return Base64.encodeToString(ar,Base64.DEFAULT);
     }
 }

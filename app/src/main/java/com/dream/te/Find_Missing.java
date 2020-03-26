@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
@@ -39,6 +41,10 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class Find_Missing extends AppCompatActivity {
     FirebaseAuth mAuth;
     private Button btn,find;
@@ -46,6 +52,8 @@ public class Find_Missing extends AppCompatActivity {
     private LottieAnimationView pganim;
     private static final String IMAGE_DIRECTORY = "/demoTE";
     private int GALLERY = 1, CAMERA = 2;
+    private TextView progress_msgtv;
+    private Bitmap bitmap;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,18 +65,24 @@ public class Find_Missing extends AppCompatActivity {
         requestMultiplePermissions();
         pganim=findViewById(R.id.progressBaranim1);
         btn = (Button) findViewById(R.id.btn1);
+        progress_msgtv=findViewById(R.id.progress_msg);
         imageview = (ImageView) findViewById(R.id.iv1);
         find= (Button) findViewById(R.id.find1);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showPictureDialog();
+                find.setAlpha(1);
+                find.setEnabled(true);
             }
         });
         find.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                disableAll();
+                if(bitmap!=null) {
+                    disableAll();
+                    uploadImage();
+                }
             }
         });
 
@@ -76,9 +90,10 @@ public class Find_Missing extends AppCompatActivity {
     }
     public void disableAll(){
         pganim.setVisibility(View.VISIBLE);
-        imageview.setAlpha(0.8f);
+        imageview.setAlpha(0.7f);
         find.setEnabled(false);
         btn.setEnabled(false);
+        progress_msgtv.setVisibility(View.VISIBLE);
         find.setAlpha(0.6f);
         btn.setAlpha(0.6f);
     }
@@ -87,6 +102,7 @@ public class Find_Missing extends AppCompatActivity {
         find.setEnabled(true);
         btn.setEnabled(true);
         pganim.setVisibility(View.INVISIBLE);
+        progress_msgtv.setVisibility(View.INVISIBLE);
         find.setAlpha(1f);
         btn.setAlpha(1f);
     }
@@ -156,8 +172,7 @@ public class Find_Missing extends AppCompatActivity {
             if (data != null) {
                 Uri contentURI = data.getData();
                 try {
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
-                   // String path = saveImage(bitmap);
+                    bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
                     imageview.setImageBitmap(bitmap);
 
                 } catch (IOException e) {
@@ -167,12 +182,39 @@ public class Find_Missing extends AppCompatActivity {
             }
 
         } else if (requestCode == CAMERA) {
-            Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
-            imageview.setImageBitmap(thumbnail);
+            bitmap = (Bitmap) data.getExtras().get("data");
+            imageview.setImageBitmap(bitmap);
 
         }
     }
+    private void uploadImage(){
+        String image=imageToString();
+        //String title=FirebaseAuth.getInstance().getCurrentUser().getUid()+"sachin";
+        ApiInterface apiInterface=ApiClient.getAppClient().create(ApiInterface.class);
+        Call<Object> call=apiInterface.putPost("1",image);
 
+        call.enqueue(new Callback<Object>() {
+            @Override
+            public void onResponse(Call<Object> call, Response<Object> response) {
+                if(response.isSuccessful()){
+                    Toast.makeText(Find_Missing.this, "success", Toast.LENGTH_SHORT).show();
+                   enableAll();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Object> call, Throwable t) {
+                Toast.makeText(Find_Missing.this, "Something went wrong try again...", Toast.LENGTH_SHORT).show();
+                enableAll();
+            }
+        });
+    }
+    public String imageToString(){
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 70, bytes);
+        byte ar[]=bytes.toByteArray();
+        return Base64.encodeToString(ar,Base64.DEFAULT);
+    }
     public String saveImage(Bitmap myBitmap) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);

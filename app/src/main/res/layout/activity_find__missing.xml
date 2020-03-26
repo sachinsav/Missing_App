@@ -20,7 +20,15 @@
             android:gravity="center"
             android:orientation="vertical"
             android:weightSum="2">
-
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/progress_msg"
+                android:textColor="#f00"
+                android:id="@+id/progress_msg"
+                android:visibility="invisible"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"/>
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -74,6 +82,8 @@
                     android:layout_marginBottom="15dp"
                     android:background="@drawable/btn_drawable"
                     android:text="Find"
+                    android:enabled="false"
+                    android:alpha="0.6"
                     android:textColor="@color/colorAccent"
                     android:textSize="20sp" />
             </LinearLayout>
