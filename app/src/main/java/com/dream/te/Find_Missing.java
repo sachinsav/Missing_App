@@ -3,12 +3,19 @@ package com.dream.te;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -38,6 +45,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Calendar;
 import java.util.List;
 
@@ -61,7 +69,6 @@ public class Find_Missing extends AppCompatActivity {
         getSupportActionBar().setTitle("Find Missing People");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mAuth=FirebaseAuth.getInstance();
-
         requestMultiplePermissions();
         pganim=findViewById(R.id.progressBaranim1);
         btn = (Button) findViewById(R.id.btn1);
@@ -173,42 +180,116 @@ public class Find_Missing extends AppCompatActivity {
                 Uri contentURI = data.getData();
                 try {
                     bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
+                    if(contentURI!=null && bitmap!=null){
+                    bitmap=rotateifrequire(contentURI);
+                    }
                     imageview.setImageBitmap(bitmap);
 
                 } catch (IOException e) {
                     e.printStackTrace();
-                    Toast.makeText(Find_Missing.this, "Failed!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Find_Missing.this, "Failed!"+e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
 
         } else if (requestCode == CAMERA) {
             bitmap = (Bitmap) data.getExtras().get("data");
+            Uri contenturi = data.getData();
+            if(contenturi==null){
+                contenturi = getImageUri(Find_Missing.this,bitmap);
+            }
+            if(contenturi!=null){
+                bitmap=rotateifrequire(contenturi);
+                Toast.makeText(this, "rotated", Toast.LENGTH_SHORT).show();
+            }
             imageview.setImageBitmap(bitmap);
 
         }
     }
+
     private void uploadImage(){
-        String image=imageToString();
-        //String title=FirebaseAuth.getInstance().getCurrentUser().getUid()+"sachin";
-        ApiInterface apiInterface=ApiClient.getAppClient().create(ApiInterface.class);
-        Call<Object> call=apiInterface.putPost("1",image);
-
-        call.enqueue(new Callback<Object>() {
-            @Override
-            public void onResponse(Call<Object> call, Response<Object> response) {
-                if(response.isSuccessful()){
-                    Toast.makeText(Find_Missing.this, "success", Toast.LENGTH_SHORT).show();
-                   enableAll();
-                }
-            }
+        Runnable task1 = new Runnable(){
 
             @Override
-            public void onFailure(Call<Object> call, Throwable t) {
-                Toast.makeText(Find_Missing.this, "Something went wrong try again...", Toast.LENGTH_SHORT).show();
-                enableAll();
+            public void run(){
+                String image=imageToString();
+                //String title=FirebaseAuth.getInstance().getCurrentUser().getUid()+"sachin";
+                ApiInterface apiInterface=ApiClient.getAppClient().create(ApiInterface.class);
+                Call<String> call=apiInterface.putPost("9",image);
+
+                call.enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+                        if(response.isSuccessful()){
+                            if(!response.body().equals("1")){
+                                enableAll();
+                                person_found(response.body());
+                            }else {
+                                Snackbar snackbar=Snackbar.make(btn,"No matching Image Found",Snackbar.LENGTH_LONG);
+                                snackbar.show();
+                                enableAll();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
+                        Toast.makeText(Find_Missing.this, "Something went wrong try again...", Toast.LENGTH_SHORT).show();
+                        Log.d("somethingwentwrong",t.toString());
+                        enableAll();
+                    }
+                });
             }
-        });
+        };
+
+
+        Thread thread1 = new Thread(task1);
+        thread1.start();
+
     }
+    public Bitmap rotateifrequire(Uri selectedPicture){
+        String[] filePathColumn = {MediaStore.Images.Media.DATA};
+        Cursor cursor = this.getContentResolver().query(selectedPicture, filePathColumn, null, null, null);
+        cursor.moveToFirst();
+
+        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+        String picturePath = cursor.getString(columnIndex);
+        cursor.close();
+
+        Bitmap loadedBitmap = BitmapFactory.decodeFile(picturePath);
+
+        ExifInterface exif = null;
+        try {
+            File pictureFile = new File(picturePath);
+            exif = new ExifInterface(pictureFile.getAbsolutePath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        int orientation = ExifInterface.ORIENTATION_NORMAL;
+
+        if (exif != null)
+            orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+
+        switch (orientation) {
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                loadedBitmap = rotateBitmap(loadedBitmap, 90);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                loadedBitmap = rotateBitmap(loadedBitmap, 180);
+                break;
+
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                loadedBitmap = rotateBitmap(loadedBitmap, 270);
+                break;
+        }
+        return loadedBitmap;
+    }
+    public static Bitmap rotateBitmap(Bitmap bitmap, int degrees) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degrees);
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+    }
+
     public String imageToString(){
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 70, bytes);
@@ -288,5 +369,17 @@ public class Find_Missing extends AppCompatActivity {
                 Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 40, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
+    }
+    public void person_found(String uid){
 
+        Intent intent=new Intent(Find_Missing.this,PersonFound.class);
+        intent.putExtra("userid",uid);
+        startActivity(intent);
+
+    }
 }

@@ -1,5 +1,8 @@
 package com.dream.te;
 
+import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -13,6 +16,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class FirebaseHelper {
     static FirebaseHelper fh = null;
@@ -36,6 +42,7 @@ public class FirebaseHelper {
         DatabaseReference myRef = database.getReference("UserProfile").child(uid);
         myRef.setValue(details);
     }
+
     public static void add_To_Count(String c1,String c2) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();

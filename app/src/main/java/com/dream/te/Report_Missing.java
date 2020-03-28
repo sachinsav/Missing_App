@@ -8,7 +8,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
@@ -192,9 +196,13 @@ public class Report_Missing extends AppCompatActivity {
         } else if (requestCode == CAMERA) {
              img_uri=data.getData();
             bitmap = (Bitmap) data.getExtras().get("data");
-            imageview.setImageBitmap(bitmap);
+
             if(img_uri==null)
                 img_uri = getImageUri(this, bitmap);
+            if(img_uri!=null){
+                bitmap=rotateifrequire(img_uri);
+            }
+            imageview.setImageBitmap(bitmap);
         }
     }
 
@@ -205,7 +213,49 @@ public class Report_Missing extends AppCompatActivity {
         String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
         return Uri.parse(path);
     }
+    public Bitmap rotateifrequire(Uri selectedPicture){
+        String[] filePathColumn = {MediaStore.Images.Media.DATA};
+        Cursor cursor = this.getContentResolver().query(selectedPicture, filePathColumn, null, null, null);
+        cursor.moveToFirst();
 
+        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+        String picturePath = cursor.getString(columnIndex);
+        cursor.close();
+
+        Bitmap loadedBitmap = BitmapFactory.decodeFile(picturePath);
+
+        ExifInterface exif = null;
+        try {
+            File pictureFile = new File(picturePath);
+            exif = new ExifInterface(pictureFile.getAbsolutePath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        int orientation = ExifInterface.ORIENTATION_NORMAL;
+
+        if (exif != null)
+            orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+
+        switch (orientation) {
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                loadedBitmap = rotateBitmap(loadedBitmap, 90);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                loadedBitmap = rotateBitmap(loadedBitmap, 180);
+                break;
+
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                loadedBitmap = rotateBitmap(loadedBitmap, 270);
+                break;
+        }
+        return loadedBitmap;
+    }
+    public static Bitmap rotateBitmap(Bitmap bitmap, int degrees) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degrees);
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+    }
 
     private void requestMultiplePermissions() {
         Dexter.withActivity(this)

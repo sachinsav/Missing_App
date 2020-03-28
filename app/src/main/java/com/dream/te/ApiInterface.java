@@ -16,9 +16,11 @@ public interface ApiInterface {
             @Field("title") String title,
             @Field("u_image") String image
     );
+
+
     @FormUrlEncoded
     @PUT("check/{id}/")
-    Call<Object> putPost( @Path("id") String id,
+    Call<String> putPost( @Path("id") String id,
                           @Field("u2_image") String image);
 
 }
