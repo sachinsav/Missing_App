@@ -41,5 +41,4 @@ This is an *Android app* that communicates with the django API on my repo with t
 * If person found in the database it will show this screen.
 ![LogIn](Images/z_person_found.png)
 
-## For knowing more about app watch 
-![This Video](https://youtu.be/yPS_xMH98hE)
+## For knowing more about app watch [This Video](https://youtu.be/yPS_xMH98hE)
