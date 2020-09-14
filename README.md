@@ -4,12 +4,15 @@ This is an *Android app* that communicates with the django API on my repo with t
 ## Preview of App is shown below :
 
 ### Login Screen :
->This is Login Screen of App
+
+#### This is Login Screen of App
 ![LogIn](Images/z_Login.png)
 
 ---
 
 ### Home Screen :
+
+This is Login Screen of App
 ![LogIn](Images/z_home.png)
 
 ---
